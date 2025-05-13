@@ -83,10 +83,32 @@ function mostrarProductos(productos) {
         productoDiv.innerHTML = `
         <img src="${producto.image}" alt="${producto.title}" class="w-32 h-32 object-cover mb-4 rounded-lg">
         <h2 class="text-lg font-semibold mb-2">${producto.title}</h2>
-        <p class="text-gray-700 mb-2">$${producto.price}</p>
-        <p class="text-gray-600 mb-4">${producto.description}</p>
-        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">Agregar al carrito</button>
+        <p class="text-green-700 mb-2">$${producto.price}</p>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 mb-2">Agregar al carrito</button>
+        <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors duration-300">Detalles</button>
+        <div class="bg-gray-100 p-4 mt-4 rounded-lg">
+            <p class="text-gray-600">${producto.description}</p>
+        </div>
         `;
+        const detallesBtn = productoDiv.querySelector(".bg-purple-500");
+        const descripcion = productoDiv.querySelector(".text-gray-600");
+        descripcion.style.display = "none"; // Ocultar descripción inicialmente
+        descripcion.parentElement.style.display = "none";
+
+        detallesBtn.addEventListener("click", () => {
+            if (descripcion.style.display === "none") {
+            // Ocultar todas las descripciones visibles antes de mostrar la actual
+            document.querySelectorAll(".text-gray-600").forEach(desc => {
+                desc.style.display = "none";
+            });
+            descripcion.style.display = "block"; // Mostrar descripción
+            descripcion.parentElement.style.display = "block";
+            } else {
+            descripcion.style.display = "none"; // Ocultar descripción
+            descripcion.parentElement.style.display = "none";
+            }
+        });
+
         contenedorProductos.appendChild(productoDiv);
     });
 
@@ -130,4 +152,4 @@ document.addEventListener("DOMContentLoaded", () => {
 inputBusqueda.addEventListener('input', filtrarProductos);
   
 
-
+// Agregar un login, agregar unn contactos con la api d egoogle maps y ver detalles de los productos
