@@ -108,3 +108,29 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarCategorias();
     inputBusqueda.addEventListener("input", filtrarProductos);
 });
+
+// Verifica si el usuario está logueado al entrar a la página
+document.addEventListener("DOMContentLoaded", () => {
+  const estaLogueado = localStorage.getItem("logueado");
+
+  // Si no está logueado, lo redirige al login
+  if (!estaLogueado) {
+    window.location.href = "login.html";
+  }
+
+  // Asigna la función al enlace de logout si existe
+  const logoutLink = document.getElementById("logout-link");
+  if (logoutLink) {
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Borrar todo lo relacionado al login
+      localStorage.removeItem("token");
+      localStorage.removeItem("logueado");
+      localStorage.removeItem("usuario");
+
+      // Redirigir al login
+      window.location.href = "login.html";
+    });
+  }
+});
