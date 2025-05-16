@@ -1,29 +1,26 @@
 const contenedorProductos = document.getElementById("productos");
 const inputBusqueda = document.getElementById("busqueda");
 const contenedorCategorias = document.getElementById("categorias");
-//pobre mi gatito alguien lo ha pegado por comeloncito ahora esta llorando ay mi gatito miau miau 
 
 let Aproductos = [];
 let categoriaSeleccionada = "all";
 
-async function cargarProductos(){
-    try{
+async function cargarProductos() {
+    try {
         mostrarMensaje("Cargando productos...");
         const respuesta = await fetch("https://fakestoreapi.com/products");
-        if(!respuesta.ok){
-            throw new Error("Error en la respuesta de la API");        
-        }    
-
+        if (!respuesta.ok) {
+            throw new Error("Error en la respuesta de la API");
+        }
         const productos = await respuesta.json();
-        Aproductos = productos; 
+        Aproductos = productos;
 
-        if(productos.length === 0){
+        if (productos.length === 0) {
             console.log("No hay productos disponibles");
-        } else{
+        } else {
             mostrarProductos(productos);
         }
-
-        }catch(error){
+    } catch (error) {
         console.error("Error al cargar los productos:", error);
         contenedorProductos.innerHTML = "<p>Error al cargar los productos</p>";
     }
@@ -35,121 +32,79 @@ async function cargarCategorias() {
         if (!respuesta.ok) {
             throw new Error("Error en la respuesta de la API");
         }
-
         const categorias = await respuesta.json();
-        
-        //mostrarCategorias
         mostrarCategorias(["all", ...categorias]);
-
-        
     } catch (error) {
         console.error("Error al cargar las categorías:", error);
     }
 }
 
-
-
-
 async function filtrarProductos() {
     let filtrados = Aproductos;
-    const texto = inputBusqueda.value.toLowerCase()
+    const texto = inputBusqueda.value.toLowerCase();
 
     if (categoriaSeleccionada !== "all") {
         filtrados = filtrados.filter(p => p.category === categoriaSeleccionada);
-      }
+    }
 
     if (texto.trim() !== "") {
         filtrados = filtrados.filter(p =>
-          p.title.toLowerCase().includes(texto) ||
-          p.description.toLowerCase().includes(texto)
+            p.title.toLowerCase().includes(texto) ||
+            p.description.toLowerCase().includes(texto)
         );
-      }
+    }
 
     mostrarProductos(filtrados);
 }
 
-
-
 function mostrarMensaje(mensaje) {
-    contenedorProductos.innerHTML = `
-    <p class="text-center col-span-full text-gray-500">${mensaje}</p>`;
+    contenedorProductos.innerHTML = `<p class="text-center col-span-full text-gray-500">${mensaje}</p>`;
 }
 
 function mostrarProductos(productos) {
-    contenedorProductos.innerHTML = ""; // Limpiar el contenedor antes de agregar nuevos productos
+    contenedorProductos.innerHTML = "";
     productos.forEach((producto) => {
         const productoDiv = document.createElement("div");
         productoDiv.className = "bg-white rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-xl transition-shadow duration-300";
         productoDiv.innerHTML = `
-        <img src="${producto.image}" alt="${producto.title}" class="w-32 h-32 object-cover mb-4 rounded-lg">
-        <h2 class="text-lg font-semibold mb-2">${producto.title}</h2>
-        <p class="text-green-700 mb-2">$${producto.price}</p>
-        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 mb-2">Agregar al carrito</button>
-        <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors duration-300">Detalles</button>
-        <div class="bg-gray-100 p-4 mt-4 rounded-lg">
-            <p class="text-gray-600">${producto.description}</p>
-        </div>
+            <img src="${producto.image}" alt="${producto.title}" class="w-32 h-32 object-cover mb-4 rounded-lg">
+            <h2 class="text-lg font-semibold mb-2">${producto.title}</h2>
+            <p class="text-green-700 mb-2">$${producto.price}</p>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 mb-2">Agregar al carrito</button>
+            <button class="detalle-btn bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors duration-300">Detalles</button>
         `;
-        const detallesBtn = productoDiv.querySelector(".bg-purple-500");
-        const descripcion = productoDiv.querySelector(".text-gray-600");
-        descripcion.style.display = "none"; // Ocultar descripción inicialmente
-        descripcion.parentElement.style.display = "none";
 
-        detallesBtn.addEventListener("click", () => {
-            if (descripcion.style.display === "none") {
-            // Ocultar todas las descripciones visibles antes de mostrar la actual
-            document.querySelectorAll(".text-gray-600").forEach(desc => {
-                desc.style.display = "none";
-            });
-            descripcion.style.display = "block"; // Mostrar descripción
-            descripcion.parentElement.style.display = "block";
-            } else {
-            descripcion.style.display = "none"; // Ocultar descripción
-            descripcion.parentElement.style.display = "none";
-            }
+        const botonDetalles = productoDiv.querySelector(".detalle-btn");
+        botonDetalles.addEventListener("click", () => {
+            window.location.href = `detalles.html?id=${producto.id}`;
         });
 
         contenedorProductos.appendChild(productoDiv);
     });
-
 }
-
 
 function mostrarCategorias(categorias) {
     contenedorCategorias.innerHTML = "";
-  
     categorias.forEach((cat) => {
-      const btn = document.createElement("button");
-  
-      // Mostrar "Todos" si es la categoría "all"
-      const textoBoton = cat === "all" ? "Todos" : cat.charAt(0).toUpperCase() + cat.slice(1);
-      btn.textContent = textoBoton;
-  
-      // Clase activa si es la categoría seleccionada
-      const claseActiva = categoriaSeleccionada === cat ? "bg-blue-700" : "bg-blue-500";
-  
-      btn.className = `px-4 py-2 rounded-full text-white ${claseActiva} hover:bg-blue-600 transition-colors duration-300`;
-  
-      btn.addEventListener("click", () => {
-        categoriaSeleccionada = cat;
-        mostrarCategorias(categorias); // Actualiza estilos
-        filtrarProductos();
-      });
-  
-      contenedorCategorias.appendChild(btn); // DEBE estar dentro del forEach
+        const btn = document.createElement("button");
+        const textoBoton = cat === "all" ? "Todos" : cat.charAt(0).toUpperCase() + cat.slice(1);
+        const claseActiva = categoriaSeleccionada === cat ? "bg-blue-700" : "bg-blue-500";
+
+        btn.textContent = textoBoton;
+        btn.className = `px-4 py-2 rounded-full text-white ${claseActiva} hover:bg-blue-600 transition-colors duration-300`;
+
+        btn.addEventListener("click", () => {
+            categoriaSeleccionada = cat;
+            mostrarCategorias(categorias);
+            filtrarProductos();
+        });
+
+        contenedorCategorias.appendChild(btn);
     });
-  }
+}
 
-
-// Llamar a la función para cargar los productos al cargar la página
 document.addEventListener("DOMContentLoaded", () => {
     cargarProductos();
     cargarCategorias();
+    inputBusqueda.addEventListener("input", filtrarProductos);
 });
-
-
-
-inputBusqueda.addEventListener('input', filtrarProductos);
-  
-
-// Agregar un login, agregar unn contactos con la api d egoogle maps y ver detalles de los productos
