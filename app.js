@@ -134,3 +134,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// Coneccion al html contacto
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const contactoLink = document.getElementById("contacto-link");
+  if (contactoLink) {
+    contactoLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.location.href = "contacto.html";
+    });
+  }
+});
