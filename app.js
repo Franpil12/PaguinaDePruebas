@@ -8,7 +8,7 @@ let categoriaSeleccionada = "all";
 async function cargarProductos() {
     try {
         mostrarMensaje("Cargando productos...");
-        const respuesta = await fetch("https://fakestoreapi.com/products");
+        const respuesta = await fetch("http://127.0.0.1:8000/api/productos");
         if (!respuesta.ok) {
             throw new Error("Error en la respuesta de la API");
         }
@@ -39,6 +39,7 @@ async function cargarCategorias() {
     }
 }
 
+
 async function filtrarProductos() {
     let filtrados = Aproductos;
     const texto = inputBusqueda.value.toLowerCase();
@@ -67,9 +68,9 @@ function mostrarProductos(productos) {
         const productoDiv = document.createElement("div");
         productoDiv.className = "bg-white rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-xl transition-shadow duration-300";
         productoDiv.innerHTML = `
-            <img src="${producto.image}" alt="${producto.title}" class="w-32 h-32 object-cover mb-4 rounded-lg">
-            <h2 class="text-lg font-semibold mb-2">${producto.title}</h2>
-            <p class="text-green-700 mb-2">$${producto.price}</p>
+            <img src="${producto.imagen}" alt="${producto.titulo}" class="w-32 h-32 object-cover mb-4 rounded-lg">
+            <h2 class="text-lg font-semibold mb-2">${producto.titulo}</h2>
+            <p class="text-green-700 mb-2">$${producto.precio}</p>
             <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 mb-2">Agregar al carrito</button>
             <button class="detalle-btn bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors duration-300">Detalles</button>
         `;
@@ -147,3 +148,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
