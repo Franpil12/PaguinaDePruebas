@@ -11,6 +11,8 @@ const cancelBtn = document.getElementById('cancel-btn');
 const formTitle = document.getElementById('form-title');
 const submitBtn = document.getElementById('submit-btn');
 
+
+
 // Cargar datos iniciales
 document.addEventListener('DOMContentLoaded', () => {
     // Verificar autenticación y rol de admin
@@ -32,8 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Configurar event listeners
 function setupEventListeners() {
-    // Formulario
-    productForm.addEventListener('submit', handleFormSubmit);
     
     // Botón cancelar
     cancelBtn.addEventListener('click', resetForm);
@@ -71,6 +71,7 @@ async function cargarProductos() {
         alert('Error al cargar productos');
     }
 }
+
 
 // Cargar categorías desde la API
 async function cargarCategorias() {
@@ -157,32 +158,125 @@ function renderCategoriasCheckboxes() {
     });
 }
 
+async function subirImagenAStorage(file) {
+    return new Promise((resolve, reject) => {
+        try {
+            console.log("📁 Archivo recibido para subir:", file);
+
+            if (!storage) {
+                console.error("⚠️ Firebase Storage no está inicializado.");
+                reject("Firebase Storage no está inicializado.");
+                return;
+            }
+
+            document.getElementById('upload-progress').classList.remove('hidden');
+
+            // Normalizar el nombre del archivo
+            const nombreArchivoSeguro = file.name.replace(/\s+/g, "_");
+            console.log("🔍 Nombre de archivo formateado:", nombreArchivoSeguro);
+
+            const storageRef = storage.ref();
+            const imageRef = storageRef.child(`imagenes/${Date.now()}-${nombreArchivoSeguro}`);
+
+            console.log("🚀 Iniciando subida...");
+            const uploadTask = imageRef.put(file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    document.getElementById('progress-bar').style.width = `${progress}%`;
+                    document.getElementById('progress-text').textContent = `Subiendo imagen: ${Math.round(progress)}%`;
+                    console.log(`⬆️ Progreso: ${Math.round(progress)}%`);
+                },
+                (error) => {
+                    console.error("❌ Error al subir imagen:", error);
+                    document.getElementById('upload-progress').classList.add('hidden');
+                    reject(error);
+                },
+                () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        console.log("✅ Imagen subida correctamente. URL:", downloadURL);
+                        document.getElementById('upload-progress').classList.add('hidden');
+                        resolve(downloadURL);
+                    }).catch((error) => {
+                        console.error("❌ Error obteniendo la URL de la imagen:", error);
+                        reject(error);
+                    });
+                }
+            );
+        } catch (error) {
+            console.error("❌ Error inesperado en subirImagenAStorage:", error);
+            reject(error);
+        }
+    });
+}
+
+
+async function eliminarImagenAnterior(urlImagen) {
+    try {
+        if (!urlImagen) return; // Si no hay imagen previa, salir
+
+        // Obtener solo el nombre del archivo desde la URL
+        const nombreImagen = decodeURIComponent(urlImagen.split("/o/")[1].split("?")[0]);
+
+        const storageRef = storage.ref().child(nombreImagen);
+        await storageRef.delete(); // Eliminar imagen anterior en Firebase Storage
+
+        console.log("🗑️ Imagen anterior eliminada:", nombreImagen);
+    } catch (error) {
+        console.error("❌ Error al eliminar imagen anterior:", error);
+    }
+}
+
+
+
 // Manejar envío del formulario (crear/editar)
 async function handleFormSubmit(e) {
     e.preventDefault();
-    
+
     const formData = new FormData(productForm);
     const productId = document.getElementById('product-id').value;
-    
+    const productoActual = productId ? productos.find(p => p.id == productId) : null;
+
     // Obtener IDs de categorías seleccionadas
     const categoriasSeleccionadas = Array.from(
         document.querySelectorAll('input[name="categorias"]:checked')
     ).map(cb => parseInt(cb.value));
-    
+
+    // SUBIR IMAGEN A STORAGE solo si hay una nueva imagen seleccionada
+    let imagenURL = productoActual?.imagen || null; // Mantener la imagen actual por defecto
+    const fileInput = document.getElementById('imagen');
+
+    if (fileInput.files.length > 0) {
+        try {
+            // 🗑️ Si hay una imagen previa, eliminarla antes de subir la nueva
+            if (productoActual?.imagen) {
+                await eliminarImagenAnterior(productoActual.imagen);
+            }
+
+            // 🚀 Subir la nueva imagen a Firebase Storage
+            imagenURL = await subirImagenAStorage(fileInput.files[0]);
+        } catch (error) {
+            console.error('Error al subir imagen:', error);
+            alert('Error al subir imagen. Intenta nuevamente.');
+            return;
+        }
+    }
+
     // Construir objeto producto
     const producto = {
         titulo: formData.get('titulo'),
         descripcion: formData.get('descripcion'),
         precio: parseFloat(formData.get('precio')),
-        imagen: formData.get('imagen') || null,
+        imagen: imagenURL, // Ahora es la URL del Storage
         stock: parseInt(formData.get('stock')),
-        categorias: categoriasSeleccionadas // Enviamos array de IDs
+        categorias: categoriasSeleccionadas
     };
-    
+
     try {
         let response;
         const url = 'http://127.0.0.1:8000/api/productos';
-        
+
         const options = {
             method: productId ? 'PUT' : 'POST',
             headers: {
@@ -191,18 +285,18 @@ async function handleFormSubmit(e) {
             },
             body: JSON.stringify(producto)
         };
-        
+
         if (productId) {
             response = await fetch(`${url}/${productId}`, options);
         } else {
             response = await fetch(url, options);
         }
-        
+
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Error en la solicitud');
         }
-        
+
         resetForm();
         await cargarProductos();
         renderProductos();
@@ -212,31 +306,37 @@ async function handleFormSubmit(e) {
     }
 }
 
+
+
 // Cargar producto para editar
 function cargarProductoParaEditar(id) {
     const producto = productos.find(p => p.id == id);
-    
+
     if (!producto) return;
-    
+
+    // Rellenar datos básicos
     document.getElementById('product-id').value = producto.id;
     document.getElementById('titulo').value = producto.titulo;
     document.getElementById('descripcion').value = producto.descripcion;
     document.getElementById('precio').value = producto.precio;
-    document.getElementById('imagen').value = producto.imagen || '';
+    document.getElementById('imagen').value = ''; // Limpiar input file
     document.getElementById('stock').value = producto.stock;
-    
-    // Marcar categorías seleccionadas
+
+    // Marcar categorías seleccionadas - CORRECCIÓN AQUÍ
     if (producto.categorias) {
         document.querySelectorAll('input[name="categorias"]').forEach(checkbox => {
-            checkbox.checked = producto.categorias.some(cat => cat.nombre === checkbox.value);
+            // Comparar con el ID de la categoría (checkbox.value es string, cat.id es number)
+            checkbox.checked = producto.categorias.some(cat => cat.id == checkbox.value);
         });
     }
-    
+
     // Cambiar texto del formulario
     formTitle.textContent = `Editar Producto: ${producto.titulo}`;
     submitBtn.textContent = 'Actualizar';
     cancelBtn.style.display = 'inline-flex';
 }
+
+
 
 // Eliminar producto
 async function eliminarProducto(id) {
@@ -267,9 +367,38 @@ function resetForm() {
     formTitle.textContent = 'Crear Producto';
     submitBtn.textContent = 'Guardar';
     cancelBtn.style.display = 'none';
-    
-    // Desmarcar todas las categorías
+
+    // Desmarcar categorías
     document.querySelectorAll('input[name="categorias"]').forEach(checkbox => {
         checkbox.checked = false;
     });
+
+    // Limpiar campo de imagen (opcional, por seguridad)
+    document.getElementById('imagen').value = '';
 }
+
+productForm.addEventListener('submit', (e) => {
+    const fileInput = document.getElementById('imagen');
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        if (!file.type.match('image.*')) {
+            alert('Por favor, sube solo archivos de imagen');
+            e.preventDefault();
+            return;
+        }
+        
+        if (file.size > 5 * 1024 * 1024) { // 5MB
+            alert('La imagen es demasiado grande (máximo 5MB)');
+            e.preventDefault();
+            return;
+        }
+    }
+    
+    submitBtn.disabled = true; // 👈 Deshabilita el botón para evitar doble ejecución
+    handleFormSubmit(e).finally(() => {
+        submitBtn.disabled = false; // 👈 Reactiva el botón después de que termine el proceso
+    });
+});
+
+const storage = firebase.storage();
+console.log("🔥 Firebase Storage inicializado:", storage);

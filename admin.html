@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase App (core) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <!-- Firebase Storage -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "API PROPIA",
+            authDomain: "imagenes-efdc3.firebaseapp.com",
+            projectId: "imagenes-efdc3",
+            storageBucket: "imagenes-efdc3.firebasestorage.app",
+            messagingSenderId: "936664951000",
+            appId: "1:936664951000:web:07ca27e7b3be588b5ccfad"
+        };
+
+        // 👇 Inicializar Firebase antes de usarlo en admin.js
+        firebase.initializeApp(firebaseConfig);
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-100">
@@ -48,9 +66,10 @@
                     </div>
                     
                     <div>
-                        <label for="imagen" class="block text-sm font-medium text-gray-700">URL de la imagen</label>
-                        <input type="url" id="imagen" name="imagen"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <label for="imagen" class="block text-sm font-medium text-gray-700">Imagen*</label>
+                        <input type="file" id="imagen" name="imagen"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            accept="image/*" required>
                     </div>
                     
                     <div>
@@ -64,6 +83,14 @@
                         <div id="categorias-container" class="mt-2 space-y-2">
                             <!-- Las categorías se cargarán dinámicamente -->
                         </div>
+                    </div>
+
+                    <!-- Agrega un elemento para mostrar progreso -->
+                    <div id="upload-progress" class="hidden mt-2">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <p id="progress-text" class="text-sm text-gray-500 mt-1">Subiendo imagen: 0%</p>
                     </div>
                     
                     <div class="flex space-x-3 pt-2">

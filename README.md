@@ -1,7 +1,13 @@
+Version 2.02 (Adicion del FireBase)
+-Se agrego la conexion sobre la firebase para agregar imagenes atraves del formulario
+-El formulario se modifico para que se puedan subir imagenes del dispositivo
+-Se actualizo Admin.Html y Admin.js para su mejor conversion de datos.
+
+
 Version 2.01 (Actualizacion Base de datos y Admin)
 
 -Se cambiaron los apis por los de la base de datos Laravel
--Se adapto el codigo para su funcion correcta con la base de 
+-Se adapto el codigo para su funcion correcta con la base de Datos
 
 -Se mejoro el codigo para dectectar si el cliente es usuario o administrado
     -Si es administrador se le concede la opcion de poder editar atraves de un boton Admin
