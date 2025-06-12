@@ -1,88 +1,75 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tienda Online</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    // Validar sesión antes de cargar cualquier contenido
-    if (localStorage.getItem("logueado") !== "true") {
-      window.location.href = "login.html";
-    }
-  </script>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
 
-  <!-- NAVBAR -->
-  <header class="bg-white shadow-md p-4 flex justify-between items-center">
-    <h1 class="text-2xl font-bold text-blue-600">
-      <span class="block">Tienda</span>
-      <span class="block">Online</span>
-    </h1>
+    <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-blue-600">
+            <span class="block">Tienda</span>
+            <span class="block">Online</span>
+        </h1>
 
-    <!-- Menú en pantallas medianas o más grandes -->
-    <nav class="hidden md:flex gap-6 text-sm">
-      <a href="#" id="inicio-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm">Inicio</a>
-      <a href="#" id="productos-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm">Productos</a>
-      <a href="#" id="contacto-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm">Contactos</a>
-      <a href="#" id="admin-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm">Admin</a>
-      <a href="#" id="logout-link" class="hover:text-red-600 hover:bg-red-100 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 shadow-sm">Logout</a>
-    </nav>
+        <nav class="hidden md:flex gap-6 text-sm">
+            <a href="login.html" id="auth-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm">Login</a>
 
-    <!-- Botón hamburguesa en pantallas pequeñas -->
-    <button id="menu-btn" class="md:hidden text-3xl focus:outline-none">
-      &#9776;
-    </button>
-  </header>
+            <a href="carrito.html" id="carrito-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm">Carrito</a>
+            <a href="pedidos.html" id="pedidos-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm hidden">Mis Pedidos</a>
+            <a href="contacto.html" id="contacto-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm">Contactos</a>
+            <a href="admin.html" id="admin-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm hidden">Admin</a> <a href="#" id="logout-link" class="hover:text-red-600 hover:bg-red-100 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 shadow-sm hidden">Logout</a>
+        </nav>
 
-  <!-- Menú desplegable para móviles -->
-  <div id="mobile-menu" class="hidden md:hidden flex-col bg-white shadow-md p-4 space-y-2">
-    <a href="#" class="block hover:text-blue-600">Inicio</a>
-    <a href="#" class="block hover:text-blue-600">Productos</a>
-    <a href="#" class="block hover:text-blue-600">Contactos</a>
-  </div>
+        <button id="menu-btn" class="md:hidden text-3xl focus:outline-none">
+            &#9776;
+        </button>
+    </header>
 
-  <!-- CONTENIDO -->
-  <main class="text-center mt-10">
-    <h2 class="text-3xl font-bold">Catálogo de Productos</h2>
-    <p class="mt-2 text-gray-600">Tus compras ahora en línea.</p>
-  </main>
-
-  <section class="max-w-7xl mx-auto px-6 mb-10">
-    <div class="flex flex-col gap-4 items-center">
-      <!-- Botón de búsqueda -->
-       <input
-       id="busqueda"
-       type="text"
-       placeholder="Buscar productos..."
-       class="w-full max-w-md px-4 py-2 border-2 border-blue-400 rounded-md focus:outline-none focus:border-blue-600">
+    <div id="mobile-menu" class="hidden md:hidden flex-col bg-white shadow-md p-4 space-y-2">
+        <a href="login.html" id="mobile-auth-link" class="block hover:text-blue-600">Login</a>
+        <a href="carrito.html" class="block hover:text-blue-600">Carrito</a>
+        <a href="pedidos.html" id="mobile-pedidos-link" class="block hover:text-blue-600 hidden">Mis Pedidos</a>
+        <a href="contacto.html" class="block hover:text-blue-600">Contactos</a>
+        <a href="admin.html" id="mobile-admin-link" class="block hover:text-blue-600 hidden">Admin</a> <a href="#" id="mobile-logout-link" class="block hover:text-red-600 hidden">Logout</a>
     </div>
 
-  </section>
+    <main class="text-center mt-10">
+        <h2 class="text-3xl font-bold">Catálogo de Productos</h2>
+        <p class="mt-2 text-gray-600">Tus compras ahora en línea.</p>
+    </main>
 
-  <main>
-    <div
-    id="categorias"
-    class="flex flex-wrap gap-4 justify-center"
-    ></div>
-  </main>
+    <section class="max-w-7xl mx-auto px-6 mb-10">
+        <div class="flex flex-col gap-4 items-center">
+            <input
+                id="busqueda"
+                type="text"
+                placeholder="Buscar productos..."
+                class="w-full max-w-md px-4 py-2 border-2 border-blue-400 rounded-md focus:outline-none focus:border-blue-600">
+        </div>
+    </section>
 
-  <main class="max-w-7xl mx-auto px-6 pb-16 flex-1">
-    <div
-       id="productos"
-       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8"
-       ></div>
-   </main>
+    <main>
+        <div
+            id="categorias"
+            class="flex flex-wrap gap-4 justify-center"
+            ></div>
+    </main>
 
-   <footer class="mt-10 text-sm text-gray-500">
-    © 2025, Productos Online
-  </footer>
+    <main class="max-w-7xl mx-auto px-6 pb-16 flex-1">
+        <div
+            id="productos"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8"
+            ></div>
+    </main>
 
+    <footer class="mt-10 text-sm text-gray-500 text-center p-4">
+        © 2025, Productos Online
+    </footer>
 
-  <script src="app.js"></script>
-  
+    <script src="app.js"></script>
 
 </body>
 </html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Carrito de Compras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Validar sesión antes de cargar cualquier contenido
+        if (localStorage.getItem("logueado") !== "true") {
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-blue-600">
+            <span class="block">Tienda</span>
+            <span class="block">Online</span>
+        </h1>
+
+        <nav class="hidden md:flex gap-6 text-sm">
+            <a href="carrito.html" id="carrito-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-700 text-white shadow-sm">Carrito</a>
+            
+            </nav>
+
+        <button id="menu-btn" class="md:hidden text-3xl focus:outline-none">&#9776;</button>
+    </header>
+
+    <div id="mobile-menu" class="hidden md:hidden flex-col bg-white shadow-md p-4 space-y-2">
+        <a href="carrito.html" class="block hover:text-blue-600 font-bold">Carrito</a>
+
+        </div>
+
+    <main class="flex-1 max-w-4xl mx-auto p-6 mt-8 bg-white shadow-lg rounded-lg">
+        <h2 class="text-3xl font-bold text-center text-blue-600 mb-8">Tu Carrito de Compras</h2>
+
+        <p id="empty-cart-message" class="text-gray-500 text-center text-lg hidden">Tu carrito está vacío.</p>
+
+        <div id="cart-content">
+            <div id="cart-items-container" class="space-y-4">
+                </div>
+
+            <div class="mt-8 mb-8 p-4 border rounded-lg bg-gray-50 shadow-sm">
+                <h3 class="text-xl font-bold text-blue-600 mb-4">Selecciona Dirección de Envío</h3>
+                <div id="addresses-selection-container" class="space-y-3">
+                    <p class="text-gray-500" id="loading-addresses-message">Cargando direcciones...</p>
+                    <p class="text-red-500 hidden" id="no-addresses-error">No se pudieron cargar las direcciones. Por favor, asegúrate de tener direcciones registradas en tu <a href="inicio.html" class="text-blue-600 hover:underline">Perfil</a>.</p>
+                    </div>
+                <button id="add-new-address-redirect-btn" class="mt-4 bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition-colors">
+                    Agregar Nueva Dirección
+                </button>
+            </div>
+            <div id="checkout-actions" class="mt-8 pt-4 border-t-2 border-gray-200 text-right">
+                <p class="text-xl font-semibold text-gray-800">Total: <span id="cart-total" class="text-blue-600">$0.00</span></p>
+                <button id="checkout-button" class="mt-6 bg-green-500 text-white px-8 py-3 rounded-lg hover:bg-green-600 transition-colors duration-300 text-lg font-bold" disabled>
+                    Finalizar Pedido
+                </button>
+            </div>
+        </div>
+
+        <button onclick="window.history.back()" class="bg-gray-500 text-white px-5 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-300 mt-4">Volver</button>
+    </main>
+
+    <footer class="mt-10 p-4 text-center text-sm text-gray-500">
+        © 2025, Productos Online
+    </footer>
+
+    <script src="carrito.js"></script>
+</body>
+</html>

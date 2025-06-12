@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-blue-600">
+            <span class="block">Tienda</span>
+            <span class="block">Online</span>
+        </h1>
+
+        <nav class="hidden md:flex gap-6 text-sm">
+            <a href="index.html" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm">Tienda</a>
+            <a href="inicio.html" id="auth-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-700 text-white shadow-sm">Mi Perfil</a> <a href="carrito.html" id="carrito-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm">Carrito</a>
+            <a href="pedidos.html" id="pedidos-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm hidden">Mis Pedidos</a>
+            <a href="contacto.html" id="contacto-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm">Contactos</a>
+            <a href="#" id="admin-link" class="hover:text-blue-600 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 hover:bg-blue-100 shadow-sm hidden">Admin</a>
+            <a href="#" id="logout-link" class="hover:text-red-600 hover:bg-red-100 px-3 py-2 rounded transition-colors duration-200 font-semibold bg-blue-50 shadow-sm">Logout</a>
+        </nav>
+
+        <button id="menu-btn" class="md:hidden text-3xl focus:outline-none">&#9776;</button>
+    </header>
+
+    <div id="mobile-menu" class="hidden md:hidden flex-col bg-white shadow-md p-4 space-y-2">
+        <a href="index.html" class="block hover:text-blue-600">Tienda</a>
+        <a href="inicio.html" id="mobile-auth-link" class="block hover:text-blue-600 font-bold">Mi Perfil</a>
+        <a href="carrito.html" class="block hover:text-blue-600">Carrito</a>
+        <a href="pedidos.html" id="mobile-pedidos-link" class="block hover:text-blue-600 hidden">Mis Pedidos</a>
+        <a href="contacto.html" class="block hover:text-blue-600">Contactos</a>
+        <a href="#" id="mobile-admin-link" class="block hover:text-blue-600 hidden">Admin</a>
+        <a href="#" id="mobile-logout-link" class="block hover:text-red-600">Logout</a>
+    </div>
+
+    <main class="flex-1 max-w-4xl mx-auto p-6 mt-8 bg-white shadow-lg rounded-lg">
+        <h2 class="text-3xl font-bold text-center text-blue-600 mb-8">Información de Usuario</h2>
+
+        <div class="space-y-4">
+            <p>Nombre: <span id="user-name" class="font-semibold"></span></p>
+            <p>Email: <span id="user-email" class="font-semibold"></span></p>
+            <p>Rol: <span id="user-role" class="font-semibold"></span></p>
+
+            <h3 class="text-2xl font-bold mt-8 mb-4 text-blue-600">Mis Direcciones</h3>
+            <div id="addresses-container" class="space-y-3">
+                <p class="text-gray-500" id="no-addresses-yet">Cargando direcciones...</p>
+            </div>
+            <button id="add-address-btn" class="mt-6 bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-lg font-bold">
+                Agregar Nueva Dirección
+            </button>
+        </div>
+
+        <button onclick="window.location.href = 'index.html'" class="bg-gray-500 text-white px-5 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-300 mt-8">Volver a la Tienda</button>
+    </main>
+
+    <footer class="mt-10 p-4 text-center text-sm text-gray-500">
+        © 2025, Tienda Online
+    </footer>
+
+    <script src="inicio.js"></script>
+</body>
+</html>

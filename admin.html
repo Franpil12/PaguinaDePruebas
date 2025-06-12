@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase App (core) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <!-- Firebase Storage -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
     <script>
         const firebaseConfig = {
-            apiKey: "API PROPIA",
+            apiKey: "AIzaSyAy8hwfrbmmpJBXJPwAMb_3RZAqZ_DCASQ",
             authDomain: "imagenes-efdc3.firebaseapp.com",
             projectId: "imagenes-efdc3",
             storageBucket: "imagenes-efdc3.firebasestorage.app",
@@ -39,9 +37,7 @@
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <!-- Formulario de producto -->
-            <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8"> <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow">
                 <h2 class="text-xl font-semibold mb-4" id="form-title">Crear Producto</h2>
                 
                 <form id="product-form" class="space-y-4">
@@ -81,11 +77,9 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Categorías</label>
                         <div id="categorias-container" class="mt-2 space-y-2">
-                            <!-- Las categorías se cargarán dinámicamente -->
-                        </div>
+                            </div>
                     </div>
 
-                    <!-- Agrega un elemento para mostrar progreso -->
                     <div id="upload-progress" class="hidden mt-2">
                     <div class="w-full bg-gray-200 rounded-full h-2.5">
                         <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
@@ -107,7 +101,6 @@
                 </form>
             </div>
 
-            <!-- Lista de productos -->
             <div class="lg:col-span-3">
                 <div class="bg-white p-6 rounded-lg shadow">
                     <h2 class="text-xl font-semibold mb-4">Productos</h2>
@@ -124,16 +117,38 @@
                                 </tr>
                             </thead>
                             <tbody id="products-table" class="bg-white divide-y divide-gray-200">
-                                <!-- Los productos se cargarán dinámicamente -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="mt-8 bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Gestión de Pedidos</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Pedido</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pedidos-table" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                </table>
+                <p id="no-pedidos-admin-message" class="hidden text-gray-600 text-center mt-4">No hay pedidos registrados.</p>
+                <p id="loading-pedidos-admin-message" class="text-gray-600 text-center mt-4">Cargando pedidos...</p>
+                <p id="error-pedidos-admin-message" class="hidden text-red-600 text-center mt-4">Error al cargar los pedidos.</p>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Incluir el archivo JavaScript -->
     <script src="admin.js"></script>
 </body>
 </html>
