@@ -43,47 +43,15 @@ const mostrarMensaje = (elemento, mensaje, tipo = 'info') => {
 // --- Funciones de Pedidos ---
 
 // NUEVA FUNCIÓN: Para eliminar un pedido
-const deletePedido = async (pedidoId) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar este pedido? Esta acción no se puede deshacer.')) {
-        return; // El usuario canceló la eliminación
-    }
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-        alert('No estás autenticado. Por favor, inicia sesión para eliminar pedidos.');
-        window.location.href = 'login.html';
-        return;
-    }
 
-    try {
-        const response = await fetch(`${baseUrl}/pedidos/${pedidoId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            alert('Pedido eliminado exitosamente.');
-            loadPedidos(); // Recargar la lista de pedidos para reflejar el cambio
-        } else {
-            const errorData = await response.json();
-            alert(`Error al eliminar el pedido: ${errorData.message || 'Error desconocido'}`);
-            console.error('Error al eliminar pedido:', errorData);
-        }
-    } catch (error) {
-        console.error('Error de red al intentar eliminar el pedido:', error);
-        alert('Hubo un error de conexión al intentar eliminar el pedido. Por favor, inténtalo de nuevo.');
-    }
-};
 
 
 // Función para renderizar un solo pedido
 const renderPedido = (pedido) => {
     const pedidoDiv = document.createElement('div');
     pedidoDiv.classList.add('pedido-item', 'bg-white', 'p-6', 'rounded-lg', 'shadow-md', 'mb-6');
+    pedidoDiv.setAttribute('data-pedido-id', pedido.id);
 
     // Mapeo de estados a clases de Tailwind para colores
     const estadoClasses = {
@@ -136,9 +104,6 @@ const renderPedido = (pedido) => {
                         </div>
                     </div>
                 `).join('')}
-            </div>
-            <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
-                ${deleteButtonHtml} <p class="text-2xl font-bold text-blue-700">Total del Pedido: $${parseFloat(pedido.total).toFixed(2)}</p>
             </div>
         </div>
     `;

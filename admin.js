@@ -516,7 +516,8 @@ function renderPedidos() {
         btn.addEventListener('click', (e) => {
             const pedidoId = e.target.dataset.id;
             // Aquí puedes implementar una función para mostrar un modal con los detalles del pedido
-            alert(`Ver detalles del Pedido ID: ${pedidoId}`);
+            const pedido = pedidos.find(p => p.id == pedidoId);
+            abrirModal(pedido);
             // console.log('Pedido completo:', pedidos.find(p => p.id == pedidoId));
         });
     });
@@ -569,6 +570,54 @@ async function actualizarEstadoPedido(pedidoId, nuevoEstado) {
         }
     }
 }
+function abrirModal(pedido) {
+    const modal = document.getElementById('pedidoModal');
+    const overlay = document.getElementById('modalOverlay');
+    const modalContent = document.getElementById('modalContent');
+
+    // Formatear fecha
+    const fechaFormateada = new Date(pedido.created_at).toLocaleString('es-ES');
+
+    // Dirección
+    const direccion = pedido.direccion;
+    const direccionHTML = `
+        <p><strong>Dirección de envío:</strong> ${direccion.direccion}, ${direccion.ciudad}, ${direccion.provincia}</p>
+        <p><strong>Teléfono:</strong> ${direccion.telefono}</p>
+    `;
+
+    // Productos
+    const productosHTML = pedido.productos.map(p => `
+        <div class="flex items-center gap-4 border-b py-2">
+            <img src="${p.producto.imagen}" alt="${p.producto.titulo}" class="w-16 h-16 object-cover rounded">
+            <div class="flex-1">
+                <p class="font-semibold">${p.producto.titulo}</p>
+                <p>${p.cantidad} x $${parseFloat(p.precio_unitario).toFixed(2)} = 
+                <strong>$${parseFloat(p.subtotal).toFixed(2)}</strong></p>
+                <p class="text-xs text-gray-500">${p.producto.descripcion}</p>
+            </div>
+        </div>
+    `).join('');
+
+    // Contenido completo
+    modalContent.innerHTML = `
+        <p><strong>ID Pedido:</strong> #${pedido.id}</p>
+        <p><strong>Fecha:</strong> ${fechaFormateada}</p>
+        <p><strong>Estado:</strong> ${pedido.estado}</p>
+        <p><strong>Total:</strong> $${parseFloat(pedido.total).toFixed(2)}</p>
+        ${direccionHTML}
+        <h3 class="text-lg font-semibold mt-4">Productos:</h3>
+        <div class="divide-y divide-gray-200">${productosHTML}</div>
+    `;
+
+    modal.classList.remove('hidden');
+    overlay.classList.remove('hidden');
+}
+
+function cerrarModal() {
+    document.getElementById('pedidoModal').classList.add('hidden');
+    document.getElementById('modalOverlay').classList.add('hidden');
+}
+
 
 // Inicialización de Firebase Storage (ya existente)
 const storage = firebase.storage();

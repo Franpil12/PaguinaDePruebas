@@ -153,6 +153,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const mobileLogoutLink = document.getElementById("mobile-logout-link");
     const mobileAdminLink = document.getElementById("mobile-admin-link");
     const mobilePedidosLink = document.getElementById("mobile-pedidos-link");
+    const carritoLink = document.getElementById("carrito-link");
+    const mobileCarritoLink = document.getElementById("mobile-carrito-link");
 
     // Lógica para mostrar/ocultar enlaces de navegación basada en el estado de autenticación y el rol
     if (estaLogueado && token && usuario) {
@@ -166,8 +168,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (usuario.rol === "admin") {
             if (adminLink) { adminLink.classList.remove("hidden"); }
             if (mobileAdminLink) { mobileAdminLink.classList.remove("hidden"); }
-            if (pedidosLink) { pedidosLink.classList.remove("hidden"); } 
+            if (pedidosLink) { pedidosLink.classList.add("hidden"); } 
             if (mobilePedidosLink) { mobilePedidosLink.classList.remove("hidden"); }
+            if (carritoLink) { carritoLink.classList.add("hidden"); } // Oculta el enlace de carrito para admin
+            if (mobileCarritoLink) { mobileCarritoLink.classList.add("hidden"); } // Oculta el enlace de carrito para admin
         } else {
             if (adminLink) { adminLink.classList.add("hidden"); }
             if (mobileAdminLink) { mobileAdminLink.classList.add("hidden"); }
